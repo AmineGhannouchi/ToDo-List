@@ -9,15 +9,14 @@ function ToDoList() {
         if (task.trim() != "") {
             const todos = {task:task,status: false};
             setToDo(prevToDo =>[...prevToDo,todos]);
-            console.log(todo);
         }
     }
     function handelDeleteToDo(index) {
-        const updatedToDo = todo.filter((item, i) => i !== index);
+        const updatedToDo = todo.filter((_, i) => i !== index);
         setToDo(updatedToDo);
     }
-    function handelUpToDo() {}
-    function handelDownToDo() {}
+    function handelUpToDo(index) {}
+    function handelDownToDo(index) {}
     function handelStatusToDo() {}
     return (
         <>
@@ -28,9 +27,9 @@ function ToDoList() {
             {todo.map((item,index) => (
                 <li key={index}>
                 {item.task}
-                <button onClick={handelDeleteToDo(index)}>Delete</button>
-                <button onClick={handelUpToDo}>Up</button>
-                <button onClick={handelDownToDo}>Down</button>
+                <button onClick={()=>handelDeleteToDo(index)}>Delete</button>
+                <button onClick={()=>handelUpToDo(index)}>Up</button>
+                <button onClick={()=>handelDownToDo(index)}>Down</button>
                 <button onClick={handelStatusToDo}>Status</button>
                 </li>
             ))}
