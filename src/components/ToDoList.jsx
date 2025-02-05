@@ -12,7 +12,10 @@ function ToDoList() {
             console.log(todo);
         }
     }
-    function handelDeleteToDo() {}
+    function handelDeleteToDo(index) {
+        const updatedToDo = todo.filter((item, i) => i !== index);
+        setToDo(updatedToDo);
+    }
     function handelUpToDo() {}
     function handelDownToDo() {}
     function handelStatusToDo() {}
@@ -25,7 +28,7 @@ function ToDoList() {
             {todo.map((item,index) => (
                 <li key={index}>
                 {item.task}
-                <button onClick={handelDeleteToDo}>Delete</button>
+                <button onClick={handelDeleteToDo(index)}>Delete</button>
                 <button onClick={handelUpToDo}>Up</button>
                 <button onClick={handelDownToDo}>Down</button>
                 <button onClick={handelStatusToDo}>Status</button>
