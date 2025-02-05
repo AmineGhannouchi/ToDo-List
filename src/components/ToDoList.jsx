@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import "./ToDoList.css";
 
 function ToDoList() {
     const [todo, setToDo] = useState([]);
@@ -31,27 +31,37 @@ function ToDoList() {
         setToDo([...todo]);
         if (todo[index].status) {
             document.getElementsByClassName("v"+index)[0].style.textDecoration = "line-through";
+            document.getElementById("id"+index).innerHTML = "❌";
         }else{
             document.getElementsByClassName("v"+index)[0].style.textDecoration = "none";
+            document.getElementById("id"+index).innerHTML = "✅";
         }
 
     }
     return (
         <>
-        <input type="text" onChange={(e) => setTask(e.target.value)} />
+        <h1>ToDo List</h1>
+        <input type="text" onChange={(e) => setTask(e.target.value)} placeholder="add element" />
         <button onClick={handleAddToDo}>Add</button>
-        
-        <ul>
+        <table>
+            <tr>
+                <th>task</th>
+                <th>delete</th>
+                <th>up</th>
+                <th>down</th>
+                <th>status</th>
+            </tr>
             {todo.map((item,index) => (
-                <li className={"v"+index} key={index}>
-                {item.task}
-                <button onClick={()=>handelDeleteToDo(index)}>Delete</button>
-                <button onClick={()=>handelUpToDo(index)}>Up</button>
-                <button onClick={()=>handelDownToDo(index)}>Down</button>
-                <button onClick={()=>handelStatusToDo(index)}>Status</button>
-                </li>
+                <tr className={"v"+index} key={index}>
+                    <td>{item.task}</td>
+                    <td><button onClick={()=>handelDeleteToDo(index)}>🚮</button></td>
+                    <td><button onClick={()=>handelUpToDo(index)}>👆</button></td>
+                    <td><button onClick={()=>handelDownToDo(index)}>👇</button></td>
+                    <td><button id={"id"+index} onClick={()=>handelStatusToDo(index)}>✅</button></td>
+                </tr>
             ))}
-        </ul>
+        
+        </table>
         </>
     );
 }
