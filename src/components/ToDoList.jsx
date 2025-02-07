@@ -9,6 +9,7 @@ function ToDoList() {
         if (task.trim() != "") {
             const todos = {task:task,status: false};
             setToDo(prevToDo =>[...prevToDo,todos]);
+            document.getElementById("inputNewTask").value = "";
         }
     }
     function handelDeleteToDo(index) {
@@ -17,35 +18,37 @@ function ToDoList() {
     }
     function handelUpToDo(index) {
         if (index === 0) return;
-        [todo[index],todo[index-1]] = [todo[index-1],todo[index]];
-        setToDo([...todo]);
+        const updatedToDo = [...todo];
+
+        [updatedToDo[index],updatedToDo[index-1]] = [updatedToDo[index-1],updatedToDo[index]];
+        setToDo(updatedToDo);
     }
     function handelDownToDo(index) {
         if (index === todo.length - 1) return;
-        [todo[index],todo[index+1]] = [todo[index+1],todo[index]];
-        setToDo([...todo]);
+        const updatedToDo= [...todo];
+        [updatedToDo[index],updatedToDo[index+1]] = [updatedToDo[index+1],updatedToDo[index]];
+        setToDo(updatedToDo);
     }
 
     function handelEditToDo(index) {
         //create an input to change emement
+        const table = document.getElementsByClassName("v"+index);
         const input = document.createElement("input");
-        const p = document.getElementsByClassName("v"+index)[0].children[0];
-        document.getElementsByClassName("v"+index)[0].removeChild(p);
+        table[0].children[0].style.display="none";
         input.value = todo[index].task;
-        document.getElementsByClassName("v"+index)[0].insertBefore(input, document.getElementsByClassName("v"+index)[0].firstChild);
+        table[0].insertBefore(input, table[0].firstChild);
 
         input.focus();
-        input.onblur = () => {
-            todo[index].task = input.value;
-            setToDo([...todo]);
-            //remove input
-            document.getElementsByClassName("v"+index)[0].removeChild(input);
-            //adding a first child in classname "v"+index with value "task"
-            const p = document.createElement("p");
-            p.innerHTML = todo[index].task;
-            //adding p in first place of class "v"+index with value of task
-            document.getElementsByClassName("v"+index)[0].insertBefore(p, document.getElementsByClassName("v"+index)[0].firstChild);
 
+        input.onkeydown = (e) => {
+            if (e.key === "Enter") {
+                const tempTodo=[...todo]; //copy of todo
+                tempTodo[index].task = input.value;
+                table[0].removeChild(input);
+                table[0].children[0].style.display="block";
+
+                setToDo(tempTodo);
+            }
         }
     }
 
@@ -65,29 +68,33 @@ function ToDoList() {
     return (
         <>
         <h1>ToDo List</h1>
-        <input type="text" onChange={(e) => setTask(e.target.value)} placeholder="add element" />
+        <input id="inputNewTask" onKeyDown={(e) => e.key === "Enter" && handleAddToDo()} type="text" onChange={(e) => setTask(e.target.value)} placeholder="add element" />
         <button onClick={handleAddToDo}>Add</button>
         <table>
-            <tr>
-                <th>task</th>
-                <th>delete</th>
-                <th>up</th>
-                <th>down</th>
-                <th>status</th>
-            </tr>
-            {todo.map((item,index) => (
-                <tr className={"v"+index} key={index}>
-                    <td>
-                        <p>{item.task}</p>
-                    </td>
-                    <td><button onClick={()=>handelDeleteToDo(index)}>🚮</button></td>
-                    <td><button onClick={()=>handelUpToDo(index)}>👆</button></td>
-                    <td><button onClick={()=>handelDownToDo(index)}>👇</button></td>
-                    <td><button onClick={()=>handelEditToDo(index)}>📝</button></td>
-                    <td><button id={"id"+index} onClick={()=>handelStatusToDo(index)}>✅</button></td>
+            <thead>
+                <tr>
+                    <th>task</th>
+                    <th>delete</th>
+                    <th>up</th>
+                    <th>down</th>
+                    <th>edit</th>
+                    <th>status</th>
                 </tr>
-            ))}
-        
+            </thead>
+            <tbody>
+                {todo.map((item,index) => (
+                    <tr className={"v"+index} key={index}>
+                        <td>
+                            <p>{item.task}</p>
+                        </td>
+                        <td><button onClick={()=>handelDeleteToDo(index)}>🚮</button></td>
+                        <td><button onClick={()=>handelUpToDo(index)}>👆</button></td>
+                        <td><button onClick={()=>handelDownToDo(index)}>👇</button></td>
+                        <td><button id={"edit"+index} onClick={()=>handelEditToDo(index)}>📝</button></td>
+                        <td><button id={"id"+index} onClick={()=>handelStatusToDo(index)}>✅</button></td>
+                    </tr>
+                ))}
+            </tbody>
         </table>
         </>
     );
