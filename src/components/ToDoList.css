@@ -1,0 +1,8 @@
+table tr td:first-child{
+    width: 100px;
+    text-align: center;
+}
+table tr > input{
+    width: 100px;
+    text-align: center;
+}

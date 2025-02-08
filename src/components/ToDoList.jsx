@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import "./ToDoList.css";
 
 function ToDoList() {
-    const [todo, setToDo] = useState([]);
-    const [task, setTask] = useState("");
+    const [todo, setToDo] = useState(() => {
+        const savedTasks = localStorage.getItem("todo");
+        return savedTasks ? JSON.parse(savedTasks) : [];
+    });
+    
+    // Sauvegarde automatique dans localStorage à chaque modification
+    useEffect(() => {
+        localStorage.setItem("todo", JSON.stringify(todo));
+    }, [todo]);
 
     function handleAddToDo() {
         if (task.trim() != "") {
@@ -57,13 +64,10 @@ function ToDoList() {
         todo[index].status = !todo[index].status;
         setToDo([...todo]);
         if (todo[index].status) {
-            document.getElementsByClassName("v"+index)[0].style.textDecoration = "line-through";
             document.getElementById("id"+index).innerHTML = "❌";
         }else{
-            document.getElementsByClassName("v"+index)[0].style.textDecoration = "none";
             document.getElementById("id"+index).innerHTML = "✅";
         }
-
     }
     return (
         <>
@@ -85,7 +89,7 @@ function ToDoList() {
                 {todo.map((item,index) => (
                     <tr className={"v"+index} key={index}>
                         <td>
-                            <p>{item.task}</p>
+                            <p style={{ textDecoration: item.status ? "line-through" : "none" }}>{item.task}</p>
                         </td>
                         <td><button onClick={()=>handelDeleteToDo(index)}>🚮</button></td>
                         <td><button onClick={()=>handelUpToDo(index)}>👆</button></td>
