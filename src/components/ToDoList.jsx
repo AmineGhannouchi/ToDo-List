@@ -2,6 +2,7 @@ import React, { useState ,useEffect } from "react";
 import "./ToDoList.css";
 
 function ToDoList() {
+    const [task,setTask] = useState();
     const [todo, setToDo] = useState(() => {
         const savedTasks = localStorage.getItem("todo");
         return savedTasks ? JSON.parse(savedTasks) : [];
